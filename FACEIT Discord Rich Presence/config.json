@@ -6,5 +6,7 @@
   "msgRanked": "Ranked",
   "msgMap": "Map",
   "msgScore": "Score",
-  "msgSearching": "Searching"
+  "msgSearching": "Searching",
+  "msgShowURLButton": "Open FACEIT Match",
+  "showURLButton": false
 }

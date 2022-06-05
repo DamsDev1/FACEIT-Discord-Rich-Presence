@@ -19,12 +19,13 @@ namespace FACEIT_Discord_Rich_Presence
         public string discordClientID { get; set; }
         public string faceitPlayerID { get; set; }
         public string faceitAPIKey { get; set; }
+        public bool showURLButton { get; set; }
         public string msgWaiting { get; set; }
         public string msgRanked { get; set; }
         public string msgMap { get; set; }
         public string msgScore { get; set; }
         public string msgSearching { get; set; }
-
+        public string msgShowURLButton { get; set; }
         public string msgLeave { get; set; }
     }
 
@@ -170,6 +171,7 @@ namespace FACEIT_Discord_Rich_Presence
                                     Details = faceit.msgScore + ": " + faction1 + " - " + faction2,
                                     State = faceit.msgMap + ": " + nameMap,
                                     Timestamps = new Timestamps(dateStartTime),
+                                    Buttons = (faceit.showURLButton) ? new DiscordRPC.Button[] { new DiscordRPC.Button() { Label = faceit.msgShowURLButton, Url = "https://www.faceit.com/en/csgo/room/"+data.match_id } } : null,
                                     Assets = new Assets()
                                     {
                                         LargeImageKey = data.voting.map.pick[0],
