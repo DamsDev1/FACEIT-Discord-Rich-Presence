@@ -12,9 +12,9 @@
     <br />
     <br />
     <br />
-    <a href="https://github.com/DamsDev1/FACEIT-Discord-RichPresence/issues/new?assignees=&labels=&template=bug_report.md&title=">Report Bug</a>
+    <a href="https://github.com/DamsDev1/FACEIT-Discord-Rich-Presence/issues/new?assignees=&labels=&template=bug_report.md&title=">Report Bug</a>
     ·
-    <a href="https://github.com/DamsDev1/FACEIT-Discord-RichPresence/issues/new?assignees=&labels=&template=feature_request.md&title=">Request Feature</a>
+    <a href="https://github.com/DamsDev1/FACEIT-Discord-Rich-Presence/issues/new?assignees=&labels=&template=feature_request.md&title=">Request Feature</a>
   </p>
 </div>
 
