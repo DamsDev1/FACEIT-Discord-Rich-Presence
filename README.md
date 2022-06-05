@@ -8,7 +8,7 @@
 <h3 align="center">FACEIT Discord Rich Presence</h3>
 
   <p align="center">
-    A C# application which adds Discord RichPresence with FACEIT data.
+    A C# application which adds Discord Rich Presence with FACEIT data.
     <br />
     <br />
     <br />
@@ -25,7 +25,7 @@
 
 This application collects information about your current game on FACEIT.
 
-It shows it to all your friends on Discord with RichPresence.
+It shows it to all your friends on Discord with Rich Presence.
 
 They can know the score, the map and the game time.
 
@@ -44,10 +44,11 @@ They can know the score, the map and the game time.
    ```json
    "faceitAPIKey": "ENTER YOUR API"
    ```
-4. Enter your FACEIT Player ID `config.json`
+4. Enter your FACEIT Player ID in `config.json`
    ```json
    "faceitPlayerID": "ENTER PLAYER ID"
    ```
+   It looks something like this : `81015611-b72a-459d-88dd-5fc2919ed73c`
 5. Execute the application
 
 <p align="right">(<a href="#top">back to top</a>)</p>
@@ -69,7 +70,7 @@ Don't forget to give the project a star! Thanks again!
 <!-- LICENSE -->
 ## License
 
-Distributed under the MIT License. See `LICENSE` for more information.
+Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
