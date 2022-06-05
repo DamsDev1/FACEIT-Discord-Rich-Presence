@@ -39,26 +39,16 @@ They can know the score, the map and the game time.
 ### Installation
 
 1. Get a free API Key at [https://developers.faceit.com/](https://developers.faceit.com/)
-2. Clone the repo
-   ```sh
-   git clone https://github.com/DamsDev1/FACEIT-RichPresence-Discord.git
-   ```
-3. Install NPM packages
-   ```sh
-   npm install
-   ```
-4. Enter your FACEIT API in `config.js`
+2. Get a release in [Releases](https://github.com/DamsDev1/FACEIT-Discord-Rich-Presence/releases)
+3. Enter your FACEIT API in `config.json`
    ```js
    const FaceitAPIKey = 'ENTER YOUR API';
    ```
-5. Enter your FACEIT Player ID `config.js`
-   ```js
+4. Enter your FACEIT Player ID `config.json`
+   ```json
    const FaceitAPIKey = 'ENTER PLAYER ID';
    ```
-6. Run the application with
-   ```sh
-   node index.js
-   ```
+5. Execute the application
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
