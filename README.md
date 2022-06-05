@@ -42,11 +42,11 @@ They can know the score, the map and the game time.
 2. Get a release in [Releases](https://github.com/DamsDev1/FACEIT-Discord-Rich-Presence/releases)
 3. Enter your FACEIT API in `config.json`
    ```json
-   "faceitAPIKey": 'ENTER YOUR API';
+   "faceitAPIKey": 'ENTER YOUR API'
    ```
 4. Enter your FACEIT Player ID `config.json`
    ```json
-   "faceitPlayerID": 'ENTER PLAYER ID';
+   "faceitPlayerID": 'ENTER PLAYER ID'
    ```
 5. Execute the application
 
