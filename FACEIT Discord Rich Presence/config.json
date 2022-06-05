@@ -1,0 +1,10 @@
+{
+  "discordClientID": "982732979728171058",
+  "faceitPlayerID": "ENTER YOUR API",
+  "faceitAPIKey": "ENTER PLAYER ID",
+  "msgWaiting": "Waiting match...",
+  "msgRanked": "Ranked",
+  "msgMap": "Map",
+  "msgScore": "Score",
+  "msgSearching": "Searching"
+}
