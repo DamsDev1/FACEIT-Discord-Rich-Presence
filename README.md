@@ -41,12 +41,12 @@ They can know the score, the map and the game time.
 1. Get a free API Key at [https://developers.faceit.com/](https://developers.faceit.com/)
 2. Get a release in [Releases](https://github.com/DamsDev1/FACEIT-Discord-Rich-Presence/releases)
 3. Enter your FACEIT API in `config.json`
-   ```js
-   const FaceitAPIKey = 'ENTER YOUR API';
+   ```json
+   "faceitAPIKey": 'ENTER YOUR API';
    ```
 4. Enter your FACEIT Player ID `config.json`
    ```json
-   const FaceitAPIKey = 'ENTER PLAYER ID';
+   "faceitPlayerID": 'ENTER PLAYER ID';
    ```
 5. Execute the application
 
