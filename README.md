@@ -44,10 +44,11 @@ They can know the score, the map and the game time.
    ```json
    "faceitAPIKey": "ENTER YOUR API"
    ```
-4. Enter your FACEIT Player ID `config.json`
+4. Enter your FACEIT Player ID in `config.json`
    ```json
    "faceitPlayerID": "ENTER PLAYER ID"
    ```
+   It looks something like this : `81015611-b72a-459d-88dd-5fc2919ed73c`
 5. Execute the application
 
 <p align="right">(<a href="#top">back to top</a>)</p>
