@@ -8,7 +8,7 @@
 <h3 align="center">FACEIT Discord Rich Presence</h3>
 
   <p align="center">
-    A C# application which adds Discord RichPresence with FACEIT data.
+    A C# application which adds Discord Rich Presence with FACEIT data.
     <br />
     <br />
     <br />
@@ -25,7 +25,7 @@
 
 This application collects information about your current game on FACEIT.
 
-It shows it to all your friends on Discord with RichPresence.
+It shows it to all your friends on Discord with Rich Presence.
 
 They can know the score, the map and the game time.
 
