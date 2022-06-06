@@ -101,6 +101,7 @@ namespace FACEIT_Discord_Rich_Presence
                     }
                 });
                 state = faceit.msgWaiting;
+                DateTime timestamp_tmp = DateTime.UtcNow;
                 async void checkPlayer()
                 {
                     if (inMatch == false)
@@ -114,12 +115,33 @@ namespace FACEIT_Discord_Rich_Presence
                             string responseFromServer = reader.ReadToEnd();
                             // Display the content.
                             dynamic data = JObject.Parse(responseFromServer);
-
-                            if (data != null && data.payload != null && data.payload.ONGOING != null && data.payload.ONGOING[0] != null)
+                            if (data != null && data.payload != null)
                             {
-                                matchID = data.payload.ONGOING[0].id;
-                                inMatch = true;
-                                checkMatch();
+                                if (data.payload.ONGOING != null && data.payload.ONGOING[0] != null)
+                                {
+                                    matchID = data.payload.ONGOING[0].id;
+                                    inMatch = true;
+                                    checkMatch();
+                                }
+                                else if (data.payload.READY != null && data.payload.READY[0] != null)
+                                {
+                                    matchID = data.payload.READY[0].id;
+                                    inMatch = true;
+                                    checkMatch();
+                                }
+                                else if (data.payload.CONFIGURING != null && data.payload.CONFIGURING[0] != null)
+                                {
+                                    matchID = data.payload.CONFIGURING[0].id;
+                                    inMatch = true;
+                                    checkMatch();
+                                }
+                                else if (data.payload.VOTING != null && data.payload.VOTING[0] != null)
+                                {
+                                    matchID = data.payload.VOTING[0].id;
+                                    inMatch = true;
+                                    checkMatch();
+                                }
+
                             }
                             else
                             {
@@ -175,9 +197,6 @@ namespace FACEIT_Discord_Rich_Presence
                                         }
                                     }
 
-
-
-
                                     // Getting starting date of match
                                     String dateStart = data.started_at;
                                     DateTime dateStartTime = UnixTimeStampToDateTime(Convert.ToDouble(data.started_at));
@@ -212,11 +231,15 @@ namespace FACEIT_Discord_Rich_Presence
                                     // Match waiting all players
                                     else if (data.status == "READY")
                                     {
+                                        if (state != faceit.msgLaunchWaiting)
+                                        {
+                                            timestamp_tmp = DateTime.UtcNow;
+                                        }
                                         client.SetPresence(new RichPresence()
                                         {
                                             Details = faceit.msgLaunchWaiting,
                                             State = faceit.msgMap + ": " + nameMap,
-                                            Timestamps = new Timestamps(dateStartTime),
+                                            Timestamps = new Timestamps(timestamp_tmp),
                                             Buttons = (faceit.showURLButton) ? new DiscordRPC.Button[] { new DiscordRPC.Button() { Label = faceit.msgShowURLButton, Url = "https://www.faceit.com/en/csgo/room/" + data.match_id } } : null,
                                             Assets = new Assets()
                                             {
@@ -232,11 +255,15 @@ namespace FACEIT_Discord_Rich_Presence
                                     // Match configuring map
                                     else
                                     {
+                                        if (state != faceit.msgConfiguring)
+                                        {
+                                            timestamp_tmp = DateTime.UtcNow;
+                                        }
                                         client.SetPresence(new RichPresence()
                                         {
                                             Details = faceit.msgConfiguring,
                                             State = faceit.msgMap + ": " + nameMap,
-                                            Timestamps = new Timestamps(dateStartTime),
+                                            Timestamps = new Timestamps(timestamp_tmp),
                                             Buttons = (faceit.showURLButton) ? new DiscordRPC.Button[] { new DiscordRPC.Button() { Label = faceit.msgShowURLButton, Url = "https://www.faceit.com/en/csgo/room/" + data.match_id } } : null,
                                             Assets = new Assets()
                                             {
@@ -251,12 +278,16 @@ namespace FACEIT_Discord_Rich_Presence
                                 }
                                 else
                                 {
+                                    if (state != faceit.msgVoting)
+                                    {
+                                        timestamp_tmp = DateTime.UtcNow;
+                                    }
                                     // Match voting map
                                     client.SetPresence(new RichPresence()
                                     {
                                         Details = faceit.msgVoting,
                                         State = null,
-                                        Timestamps = Timestamps.Now,
+                                        Timestamps = new Timestamps(timestamp_tmp),
                                         Buttons = (faceit.showURLButton) ? new DiscordRPC.Button[] { new DiscordRPC.Button() { Label = faceit.msgShowURLButton, Url = "https://www.faceit.com/en/csgo/room/" + data.match_id } } : null,
                                         Assets = new Assets()
                                         {
@@ -273,6 +304,7 @@ namespace FACEIT_Discord_Rich_Presence
                             {
                                 inMatch = false;
                                 matchID = "0";
+                                state = "";
                                 checkPlayer();
                             }
                         }
