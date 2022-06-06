@@ -8,5 +8,8 @@
   "msgScore": "Score",
   "msgSearching": "Searching",
   "msgShowURLButton": "Open FACEIT Match",
+  "msgLaunchWaiting": "Waiting for the game to start",
+  "msgVoting": "Voting in progress",
+  "msgConfiguring": "Configuration in progress",
   "showURLButton": false
 }

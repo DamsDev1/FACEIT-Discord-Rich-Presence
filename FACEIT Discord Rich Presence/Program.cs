@@ -27,6 +27,13 @@ namespace FACEIT_Discord_Rich_Presence
         public string msgSearching { get; set; }
         public string msgShowURLButton { get; set; }
         public string msgLeave { get; set; }
+
+        public string msgLaunchWaiting { get; set; }
+
+        public string msgVoting { get; set; }
+
+
+        public string msgConfiguring { get; set; }
     }
 
     internal class Program
@@ -93,10 +100,10 @@ namespace FACEIT_Discord_Rich_Presence
                         LargeImageText = faceit.msgSearching,
                     }
                 });
-
+                state = faceit.msgWaiting;
                 async void checkPlayer()
                 {
-                    if(inMatch == false)
+                    if (inMatch == false)
                     {
                         WebRequest webRequest = WebRequest.Create("https://api.faceit.com/match/v1/matches/groupByState?userId=" + faceit.faceitPlayerID);
                         HttpWebResponse response = (HttpWebResponse)webRequest.GetResponse();
@@ -108,14 +115,17 @@ namespace FACEIT_Discord_Rich_Presence
                             // Display the content.
                             dynamic data = JObject.Parse(responseFromServer);
 
-                            if(data != null && data.payload != null && data.payload.ONGOING != null && data.payload.ONGOING[0] != null)
+                            if (data != null && data.payload != null && data.payload.ONGOING != null && data.payload.ONGOING[0] != null)
                             {
                                 matchID = data.payload.ONGOING[0].id;
                                 inMatch = true;
                                 checkMatch();
-                            } else {
-                                if(state != faceit.msgWaiting)
+                            }
+                            else
+                            {
+                                if (state != faceit.msgWaiting)
                                 {
+                                    state = faceit.msgWaiting;
                                     client.SetPresence(new RichPresence()
                                     {
                                         Details = faceit.msgWaiting,
@@ -133,11 +143,10 @@ namespace FACEIT_Discord_Rich_Presence
                         await Task.Delay(60000);
                         checkPlayer();
                     }
-
                 }
                 async void checkMatch()
                 {
-                    if(inMatch && matchID != "0")
+                    if (inMatch && matchID != "0")
                     {
                         WebRequest myWebRequest = WebRequest.Create("https://open.faceit.com/data/v4/matches/" + matchID);
                         var myHttpWebRequest = (HttpWebRequest)myWebRequest;
@@ -152,37 +161,114 @@ namespace FACEIT_Discord_Rich_Presence
                             // Display the content.
                             dynamic data = JObject.Parse(responseFromServer);
 
-                            if (data != null && data.status == "ONGOING")
+                            if (data != null && (data.status == "ONGOING" || data.status == "READY" || data.status == "VOTING" || data.status == "CONFIGURING"))
                             {
-                                String nameMap = "";
-                                foreach (dynamic map in data.voting.map.entities) {
-                                    if(map.class_name == data.voting.map.pick[0])
+                                if (data.status == "READY" || data.status == "ONGOING" || data.status == "CONFIGURING")
+                                {
+                                    // Getting name of the current map
+                                    String nameMap = "";
+                                    foreach (dynamic map in data.voting.map.entities)
                                     {
-                                        nameMap = map.name;
+                                        if (map.class_name == data.voting.map.pick[0])
+                                        {
+                                            nameMap = map.name;
+                                        }
+                                    }
+
+
+
+
+                                    // Getting starting date of match
+                                    String dateStart = data.started_at;
+                                    DateTime dateStartTime = UnixTimeStampToDateTime(Convert.ToDouble(data.started_at));
+                                    dateStartTime = dateStartTime.ToUniversalTime();
+
+                                    // Match started
+                                    if (data.status == "ONGOING")
+                                    {
+                                        // Getting current score
+                                        if (data.results != null && data.results.score != null && data.results.score.faction1 != null && data.results.score.faction2 != null)
+                                        {
+                                            String faction1 = data.results.score.faction1;
+                                            String faction2 = data.results.score.faction2;
+                                            client.SetPresence(new RichPresence()
+                                            {
+                                                Details = faceit.msgScore + ": " + faction1 + " - " + faction2,
+                                                State = faceit.msgMap + ": " + nameMap,
+                                                Timestamps = new Timestamps(dateStartTime),
+                                                Buttons = (faceit.showURLButton) ? new DiscordRPC.Button[] { new DiscordRPC.Button() { Label = faceit.msgShowURLButton, Url = "https://www.faceit.com/en/csgo/room/" + data.match_id } } : null,
+                                                Assets = new Assets()
+                                                {
+                                                    LargeImageKey = data.voting.map.pick[0],
+                                                    LargeImageText = nameMap,
+                                                    SmallImageKey = "competitive",
+                                                    SmallImageText = faceit.msgRanked
+                                                }
+                                            });
+                                            state = faceit.msgScore + ": " + faction1 + " - " + faction2;
+                                        }
+                                    }
+
+                                    // Match waiting all players
+                                    else if (data.status == "READY")
+                                    {
+                                        client.SetPresence(new RichPresence()
+                                        {
+                                            Details = faceit.msgLaunchWaiting,
+                                            State = faceit.msgMap + ": " + nameMap,
+                                            Timestamps = new Timestamps(dateStartTime),
+                                            Buttons = (faceit.showURLButton) ? new DiscordRPC.Button[] { new DiscordRPC.Button() { Label = faceit.msgShowURLButton, Url = "https://www.faceit.com/en/csgo/room/" + data.match_id } } : null,
+                                            Assets = new Assets()
+                                            {
+                                                LargeImageKey = data.voting.map.pick[0],
+                                                LargeImageText = nameMap,
+                                                SmallImageKey = "competitive",
+                                                SmallImageText = faceit.msgRanked
+                                            }
+                                        });
+                                        state = faceit.msgLaunchWaiting;
+                                    }
+
+                                    // Match configuring map
+                                    else
+                                    {
+                                        client.SetPresence(new RichPresence()
+                                        {
+                                            Details = faceit.msgConfiguring,
+                                            State = faceit.msgMap + ": " + nameMap,
+                                            Timestamps = new Timestamps(dateStartTime),
+                                            Buttons = (faceit.showURLButton) ? new DiscordRPC.Button[] { new DiscordRPC.Button() { Label = faceit.msgShowURLButton, Url = "https://www.faceit.com/en/csgo/room/" + data.match_id } } : null,
+                                            Assets = new Assets()
+                                            {
+                                                LargeImageKey = data.voting.map.pick[0],
+                                                LargeImageText = nameMap,
+                                                SmallImageKey = "competitive",
+                                                SmallImageText = faceit.msgRanked
+                                            }
+                                        });
+                                        state = faceit.msgConfiguring;
                                     }
                                 }
-                                String faction1 = data.results.score.faction1;
-                                String faction2 = data.results.score.faction2;
-                                String dateStart = data.started_at;
-                                DateTime dateStartTime = UnixTimeStampToDateTime(Convert.ToDouble(data.started_at));
-                                dateStartTime = dateStartTime.ToUniversalTime();
-                                client.SetPresence(new RichPresence()
+                                else
                                 {
-                                    Details = faceit.msgScore + ": " + faction1 + " - " + faction2,
-                                    State = faceit.msgMap + ": " + nameMap,
-                                    Timestamps = new Timestamps(dateStartTime),
-                                    Buttons = (faceit.showURLButton) ? new DiscordRPC.Button[] { new DiscordRPC.Button() { Label = faceit.msgShowURLButton, Url = "https://www.faceit.com/en/csgo/room/"+data.match_id } } : null,
-                                    Assets = new Assets()
+                                    // Match voting map
+                                    client.SetPresence(new RichPresence()
                                     {
-                                        LargeImageKey = data.voting.map.pick[0],
-                                        LargeImageText = nameMap,
-                                        SmallImageKey = "competitive",
-                                        SmallImageText = faceit.msgRanked
-                                    }
-                                });
-                                state = faceit.msgScore + ": " + faction1 + " - " + faction2;
+                                        Details = faceit.msgVoting,
+                                        State = null,
+                                        Timestamps = Timestamps.Now,
+                                        Buttons = (faceit.showURLButton) ? new DiscordRPC.Button[] { new DiscordRPC.Button() { Label = faceit.msgShowURLButton, Url = "https://www.faceit.com/en/csgo/room/" + data.match_id } } : null,
+                                        Assets = new Assets()
+                                        {
+                                            LargeImageKey = "competitive",
+                                            LargeImageText = faceit.msgVoting,
+                                            SmallImageKey = null,
+                                            SmallImageText = null
+                                        }
+                                    });
+                                    state = faceit.msgVoting;
+                                }
                             }
-
                             else
                             {
                                 inMatch = false;
@@ -196,6 +282,8 @@ namespace FACEIT_Discord_Rich_Presence
 
                 }
                 checkPlayer();
+
+                // Systray
                 NotifyIcon trayIcon = new NotifyIcon();
                 trayIcon.Text = "FACEIT Presence";
                 trayIcon.Icon = new Icon(SystemIcons.Application, 40, 40);
